@@ -1,0 +1,4 @@
+/.pytest_cache
+venv
+/Solutions/__pycache__
+/Solutions/.pytest_cache
