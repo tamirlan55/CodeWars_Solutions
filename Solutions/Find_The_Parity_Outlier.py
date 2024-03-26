@@ -40,4 +40,6 @@ class TestFindOutlier():
         ]
     )
     def test_find_outlier(self, inp_list: list, res: int):
+        '''Функция тестирования'''
         assert find_outlier(inp_list) == res
+
