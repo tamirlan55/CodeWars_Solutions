@@ -27,6 +27,9 @@ May the binary force be with you!
 class NonExistingElementError(Exception):
     '''Срабатывает, когда в списке хранящем прошлые версии не осталось элементов'''
     pass
+class VersionTypeError(Exception):
+    '''Срабатывает, когда в версии указаны буквы вместо цифр'''
+    pass
 
 class VersionManager:
     '''Класс менеджер версий'''
@@ -36,6 +39,7 @@ class VersionManager:
 
         arr = self.version.split('.')
         if self.version == '':
+            arr = ['0', '0', '1']
             self.version = '0.0.1'
         elif len(arr) < 3:
             arr.append('0')
@@ -45,9 +49,10 @@ class VersionManager:
         elif len(arr) > 3:
             arr = arr[0:3]
             self.version = '.'.join(arr)
-
-
-
+        if arr[0].lower() != arr[0].upper() or arr[1].lower() != arr[1].upper() or arr[2].lower() != arr[2].upper():
+            print(arr[0:3])
+            raise VersionTypeError('Error occured while parsing version!')
+        
     def major(self):
         '''Функция изменения версии'''
         self.version_back.append(self.version)
@@ -60,7 +65,6 @@ class VersionManager:
 
     def minor(self):
         '''Функция изменения версий'''
-        print(f'hello {self.version}')
         self.version_back.append(self.version)
         arr = self.version.split('.')
         arr[1] = str(int(arr[1]) + 1)
@@ -82,6 +86,7 @@ class VersionManager:
             raise NonExistingElementError('Cannot rollback!')
         self.version = self.version_back[-1]
         self.version_back.pop()
+        return self
 
     def release(self):
         '''Функция возвращающая текущую версию'''
@@ -90,7 +95,6 @@ class VersionManager:
     
 if __name__ == '__main__':
 
-    wc3 = VersionManager('12.4.1.3.5')
+    wc3 = VersionManager('0.0.1')
 
-    wc3.minor().minor()
-    print(wc3.version)
+    print(wc3.rollback().release())
