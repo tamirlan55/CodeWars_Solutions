@@ -24,50 +24,73 @@ release() - return a string in the format "{MAJOR}.{MINOR}.{PATCH}"
 May the binary force be with you!
 '''
 
+class NonExistingElementError(Exception):
+    '''Срабатывает, когда в списке хранящем прошлые версии не осталось элементов'''
+    pass
+
 class VersionManager:
     '''Класс менеджер версий'''
     def __init__(self, version: str = '0.0.1'):
         self.version = version
         self.version_back = []
 
+        arr = self.version.split('.')
+        if self.version == '':
+            self.version = '0.0.1'
+        elif len(arr) < 3:
+            arr.append('0')
+            arr.append('0')
+            arr = arr[0:3]
+            self.version = '.'.join(arr)
+        elif len(arr) > 3:
+            arr = arr[0:3]
+            self.version = '.'.join(arr)
+
+
+
     def major(self):
         '''Функция изменения версии'''
         self.version_back.append(self.version)
-        arr = [simbol for simbol in self.version]
+        arr = self.version.split('.')
         arr[0] = str(int(arr[0]) + 1)
+        arr[1] = '0'
         arr[2] = '0'
-        arr[4] = '0'
-        self.version = ''.join(arr)
+        self.version = '.'.join(arr)
+        return self
 
     def minor(self):
         '''Функция изменения версий'''
+        print(f'hello {self.version}')
         self.version_back.append(self.version)
-        arr = [s for s in self.version]
-        arr[2] = str(int(arr[2]) + 1)
-        arr[4] = '0'
-        self.version = ''.join(arr)
+        arr = self.version.split('.')
+        arr[1] = str(int(arr[1]) + 1)
+        arr[2] = '0'
+        self.version = '.'.join(arr)
+        return self
 
     def patch(self):
         '''Функция изменения версий'''
         self.version_back.append(self.version)
-        arr = [s for s in self.version]
-        arr[4] = str(int(arr[4]) + 1)
-        self.version = ''.join(arr)
+        arr = self.version.split('.')
+        arr[2] = str(int(arr[2]) + 1)
+        self.version = '.'.join(arr)
+        return self
 
     def rollback(self):
         '''Фнкция возвращающая предыдущую версию'''
-        try:
-            self.version = self.version_back
-        except:
-            
         if len(self.version_back) == 0:
-            raise 
+            raise NonExistingElementError('Cannot rollback!')
         self.version = self.version_back[-1]
+        self.version_back.pop()
 
+    def release(self):
+        '''Функция возвращающая текущую версию'''
+        return self.version
 
+    
 if __name__ == '__main__':
 
-    wc3 = VersionManager('2.5.9')
+    wc3 = VersionManager('12.4.1.3.5')
 
-    wc3.major()
+    wc3.minor().minor()
     print(wc3.version)
