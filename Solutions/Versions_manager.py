@@ -52,7 +52,7 @@ class VersionManager:
         if arr[0].lower() != arr[0].upper() or arr[1].lower() != arr[1].upper() or arr[2].lower() != arr[2].upper():
             print(arr[0:3])
             raise VersionTypeError('Error occured while parsing version!')
-        
+
     def major(self):
         '''Функция изменения версии'''
         self.version_back.append(self.version)
@@ -91,10 +91,3 @@ class VersionManager:
     def release(self):
         '''Функция возвращающая текущую версию'''
         return self.version
-
-    
-if __name__ == '__main__':
-
-    wc3 = VersionManager('0.0.1')
-
-    print(wc3.rollback().release())
